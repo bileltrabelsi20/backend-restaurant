@@ -3,17 +3,18 @@ const router = express.Router();
 const nodemailer = require('nodemailer')
 const User = require('../models/userSchema');
 const jwt = require('jsonwebtoken')
-
+const bcrypt = require("bcryptjs")
 //////////////////////////// Register //////////////////////////////////
-
 router.post('/register', async (req, res) => {
-const addUser = await User.findOne({ email: req.body.email , Name : req.body.Name });
-
+const addUser = await User.findOne({ email: req.body.email });
    if (addUser == null) {
-
-      User.create(req.body).then( async(createdUser) => {
+       // 1. Hash the password 
+      const salt = bcrypt.genSaltSync(10);
+      const hash = bcrypt.hashSync(req.body.password, salt);
+       // 2. save the hash in the password
+       req.body.password = hash; 
+      User.create(req.body).then( async(userData) => {
       const transporter = nodemailer.createTransport({
-
       service: 'gmail',
       auth: {
          user: 'Point.B.restaurant@gmail.com',
@@ -23,21 +24,19 @@ const addUser = await User.findOne({ email: req.body.email , Name : req.body.Nam
       let info = await transporter.sendMail({
          from: 'Point.B.restaurant@gmail.com',
          to: req.body.email,
-
          subject: "BIENVENUE ! " ,
          text: req.body.Name ,
          html: `bonjour ` + req.body.Name + ` votre compte vient d'être créé <br> simple click <br>  http://localhost:4200 `
-   
          });
-
-         res.json(createdUser)
+         res.json(userData)
       })
-
         .catch(error => {
          console.log(error);
-         return res.json('email  exist!');
-
+          res.status(500).json({message : 'server error'});
       });
+      }
+      else {
+          res.status(400).json({message : 'email  exist!'});
       }
       });
 
