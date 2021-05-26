@@ -4,6 +4,9 @@ const nodemailer = require('nodemailer')
 const User = require('../models/userSchema');
 const jwt = require('jsonwebtoken')
 const bcrypt = require("bcryptjs")
+const passport = require ('passport')
+const bearer = require ('passport-http-bearer');
+
 //////////////////////////// Register //////////////////////////////////
 router.post('/register', async (req, res) => {
 const addUser = await User.findOne({ email: req.body.email });
@@ -32,33 +35,46 @@ const addUser = await User.findOne({ email: req.body.email });
       })
         .catch(error => {
          console.log(error);
-          res.status(500).json({message : 'server error'});
+         res.status(500).json({message : 'server error'});
       });
       }
       else {
           res.status(400).json({message : 'email  exist!'});
       }
       });
-
 /////////////////////////////////////// Login /////////////////////////////////////////////
 
 router.post('/login', async (req, res) => {
-const connectedUser = await User.findOne({ email: req.body.email, password: req.body.password });
+const connectedUser = await User.findOne({ email: req.body.email });
 
    if (!connectedUser) {
-         return res.json({ message: 'email or password is invalid!' });
+         return res.status(401).json({ message: 'email or password is invalid!' });
       }
-
    else {
-         const data = {
-            email: connectedUser.email,
-            userId: connectedUser._id
-         }
-         const createToken = jwt.sign(data, 'secret', { expiresIn: "1d" });
-         return res.json({ message: 'login successfully!', token: createToken, connectedUser });
-
+      // compar entre mdp crypt
+      bcrypt.compare(req.body.password , connectedUser.password,  (err, result) => {
+   if (result){
+      const data = {
+         email: connectedUser.email,
+         userId: connectedUser._id
       }
+      const createToken = jwt.sign(data, 'secret', { expiresIn: "1d" });
+      res.json({ message: 'login successfully!', token: createToken });
    }
-   );
+   else {
+      return res.status(400).json({
+        message: "email or password is invalid!"
+      });
+    }
+        
+      }
+      )};
+});
 
+///////////////////// log out //////////////////////////////////////
+
+router.post ('/logout' , passport.authenticate('bearer', { session: false }) , async (req,res) => {
+   req.logout();
+   res.json({message :'logout successfully'})
+})
 module.exports = router;
