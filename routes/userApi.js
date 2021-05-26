@@ -8,6 +8,7 @@ const passport = require ('passport')
 const bearer = require ('passport-http-bearer');
 
 //////////////////////////// Register //////////////////////////////////
+
 router.post('/register', async (req, res) => {
 const addUser = await User.findOne({ email: req.body.email });
    if (addUser == null) {

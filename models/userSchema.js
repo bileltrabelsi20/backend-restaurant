@@ -8,7 +8,6 @@ const userSchema = new Schema({
   password :  String ,
   role : {type:String , default:"client"}
 
-  
 });
 const user = mongoose.model('user',userSchema);
 module.exports = user;

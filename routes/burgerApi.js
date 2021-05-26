@@ -21,7 +21,6 @@ const upload = multer({ storage: storage });
 /////////////////////////////////////////
 
 router.post("/burger", [ upload.single('imageBurger') , passport.authenticate('bearer', { session: false })]  , (req, res) => {
-
   req.body.imageBurger = req.file.filename
   const burger = new Burger(req.body);
   burger.save()
@@ -43,7 +42,6 @@ router.delete('/deleteBurger/:id', passport.authenticate('bearer', { session: fa
 ////////////////////////////////////////
 
   router.put('/editBurger/:id' , [ upload.single('imageBurger') , passport.authenticate('bearer', { session: false })]  , (req,res)=> {
-
     req.body.imageBurger = req.file.filename
     Burger.findByIdAndUpdate(req.params.id,req.body,{new:true})
     .then(result => {res.send(result)})
@@ -53,7 +51,6 @@ router.delete('/deleteBurger/:id', passport.authenticate('bearer', { session: fa
   ///////// affect ingrediants to burger ///////
 
   router.put ('/affect/:idBurger/:idIngrediants' , passport.authenticate('bearer', { session: false }) ,  (req,res) =>{
-
     Burger.findByIdAndUpdate(req.params.idBurger , {$push:{ingrediants :  req.params.idIngrediants}})
     .then(result => {res.send(result)})
     .catch (err => console.log(err))

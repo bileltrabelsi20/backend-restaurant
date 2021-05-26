@@ -4,6 +4,7 @@ const router = express.Router();
 const multer = require('multer');
 const path = require ('path');
 const passport = require ('passport')
+
 ////////////////////////////////////////////////////////////////////////
 
 const storage = multer.diskStorage({
@@ -21,7 +22,6 @@ const upload = multer({ storage: storage });
 ////////////////// add_sandwich with image ///////////////////////
 
 router.post("/tacos" , [ passport.authenticate('bearer', { session: false }) ,  upload.single('imageTacos')] , (req, res) => {
-
   req.body.imageTacos = req.file.filename
   const tacos = new Tacos(req.body);
   tacos.save()
@@ -43,7 +43,6 @@ router.delete('/deleteTacos/:id' , passport.authenticate('bearer', { session: fa
 //////////////// edit_sandwich ///////////////////////
 
   router.put('/editTacos/:id' , [ passport.authenticate('bearer', { session: false }) ,  upload.single('imageTacos') ] , (req,res)=> {
-
     req.body.imageTacos = req.file.filename
     Tacos.findByIdAndUpdate(req.params.id,req.body,{new:true})
     .then(result => {res.send(result)})
@@ -53,7 +52,6 @@ router.delete('/deleteTacos/:id' , passport.authenticate('bearer', { session: fa
 ///////////////// effect ////////////////////////
 
 router.put ('/tacos/:idTacos/:idIngrediants' , passport.authenticate('bearer', { session: false }) , (req,res) =>{
-
   Tacos.findByIdAndUpdate(req.params.idTacos , {$push:{ingrediants :  req.params.idIngrediants}})
   .then(result => {res.send(result)})
   .catch (err => console.log(err))
