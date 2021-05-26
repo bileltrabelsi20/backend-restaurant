@@ -3,6 +3,7 @@ const Burger = require("../models/burgerSchema");
 const router = express.Router();
 const path = require ('path');
 const multer = require('multer');
+const passport = require ('passport')
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -15,12 +16,11 @@ const storage = multer.diskStorage({
         cb(null, newFileName);
     }
 });
-
 const upload = multer({ storage: storage });
 
 /////////////////////////////////////////
 
-router.post("/burger",  upload.single('imageBurger') , (req, res) => {
+router.post("/burger", [ upload.single('imageBurger') , passport.authenticate('bearer', { session: false })]  , (req, res) => {
 
   req.body.imageBurger = req.file.filename
   const burger = new Burger(req.body);
@@ -33,7 +33,7 @@ router.post("/burger",  upload.single('imageBurger') , (req, res) => {
 
 ////////////////////////////////////////
 
-router.delete('/deleteBurger/:id',(req,res)=> {
+router.delete('/deleteBurger/:id', passport.authenticate('bearer', { session: false }),(req,res)=> {
     _id=req.params.id
     Burger.findByIdAndDelete(_id)
     .then (()=>{res.send('deleted , verifier data base')})
@@ -42,7 +42,7 @@ router.delete('/deleteBurger/:id',(req,res)=> {
 
 ////////////////////////////////////////
 
-  router.put('/editBurger/:id' ,  upload.single('imageBurger') , (req,res)=> {
+  router.put('/editBurger/:id' , [ upload.single('imageBurger') , passport.authenticate('bearer', { session: false })]  , (req,res)=> {
 
     req.body.imageBurger = req.file.filename
     Burger.findByIdAndUpdate(req.params.id,req.body,{new:true})
@@ -52,7 +52,7 @@ router.delete('/deleteBurger/:id',(req,res)=> {
 
   ///////// affect ingrediants to burger ///////
 
-  router.put ('/affect/:idBurger/:idIngrediants' , (req,res) =>{
+  router.put ('/affect/:idBurger/:idIngrediants' , passport.authenticate('bearer', { session: false }) ,  (req,res) =>{
 
     Burger.findByIdAndUpdate(req.params.idBurger , {$push:{ingrediants :  req.params.idIngrediants}})
     .then(result => {res.send(result)})
@@ -62,7 +62,7 @@ router.delete('/deleteBurger/:id',(req,res)=> {
 
   ///////////////// get all ///////////////////
 
-router.get('/findAllBurgers',(req,res)=>{
+router.get('/findAllBurgers' , passport.authenticate('bearer', { session: false }) , (req,res)=>{
   Burger.find()
   .then(result => {res.send(result)})
   .catch (err => console.log(err))

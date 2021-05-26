@@ -3,7 +3,7 @@ const Sandwich = require("../models/sandwichSchema");
 const router = express.Router();
 const path = require ('path');
 const multer = require('multer');
-
+const passport = require ('passport')
 ////////////////////////////////////////////////////////////////////////
 
 const storage = multer.diskStorage({
@@ -20,7 +20,7 @@ const upload = multer({ storage: storage });
 
 ////////////////// add_sandwich ///////////////////////
 
-router.post("/sandwich", upload.single('imageSandwich') , (req, res) => {
+router.post("/sandwich", [ upload.single('imageSandwich') , passport.authenticate('bearer', { session: false }) ] , (req, res) => {
 
   req.body.imageSandwich = req.file.filename
   const sandwich = new Sandwich(req.body);
@@ -33,7 +33,7 @@ router.post("/sandwich", upload.single('imageSandwich') , (req, res) => {
 
 ////////////////// delete_sandwich ////////////////////
 
-router.delete('/deleteSandwich/:id',(req,res)=> {
+router.delete('/deleteSandwich/:id' , passport.authenticate('bearer', { session: false }),(req,res)=> {
     _id=req.params.id
     Sandwich.findByIdAndDelete(_id)
     .then (()=>{res.send('deleted , verifier data base')})
@@ -42,7 +42,7 @@ router.delete('/deleteSandwich/:id',(req,res)=> {
 
 //////////////// edit_sandwich ///////////////////////
 
-  router.put('/editSandwich/:id' , upload.single('imageSandwich') , (req,res)=> {
+  router.put('/editSandwich/:id' , [ passport.authenticate('bearer', { session: false }) , upload.single('imageSandwich')] , (req,res)=> {
     Sandwich.findByIdAndUpdate(req.params.id,req.body,{new:true})
     .then(result => {res.send(result)})
     .catch (err => console.log(err))
@@ -50,7 +50,7 @@ router.delete('/deleteSandwich/:id',(req,res)=> {
 
 //////////////////////////////////////////////////////
 
-router.put ('/affect/:idSandwich/:idIngrediants' , (req,res) =>{
+router.put ('/affect/:idSandwich/:idIngrediants' , passport.authenticate('bearer', { session: false }) , (req,res) =>{
 
   Sandwich.findByIdAndUpdate(req.params.idSandwich , {$push:{ingrediants :  req.params.idIngrediants}})
   .then(result => {res.send(result)})
@@ -60,7 +60,7 @@ router.put ('/affect/:idSandwich/:idIngrediants' , (req,res) =>{
 
 ///////////////// get all ///////////////////
 
-router.get('/findAllSandwichs',(req,res)=>{
+router.get('/findAllSandwichs' , passport.authenticate('bearer', { session: false }) ,(req,res)=>{
   Sandwich.find()
   .then(result => {res.send(result)})
   .catch (err => console.log(err))

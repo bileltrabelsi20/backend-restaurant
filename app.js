@@ -6,6 +6,7 @@ const ingrediantApi = require ('./routes/ingrediantApi')
 const burgerApi = require ('./routes/burgerApi')
 const tacosApi = require ('./routes/tacosApi')
 const mailer = require ('./routes/sendMail')
+const strategy = require('./passport/strategy')
 const cors = require('cors')
 const bodyParser = require('body-parser');
 const app = express();

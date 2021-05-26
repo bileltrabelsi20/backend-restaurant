@@ -3,7 +3,7 @@ const Ingrediant = require("../models/ingrediantsSchema");
 const router = express.Router();
 const path = require ('path');
 const multer = require('multer');
-
+const passport = require ('passport')
 ////////////////////////////////////////////////////////////////////////
 
 const storage = multer.diskStorage({
@@ -20,7 +20,7 @@ const upload = multer({ storage: storage });
 
 /////////////////////////////////////////
 
-router.post("/ingrediant",upload.single('imageIngrediant') , (req, res) => {
+router.post("/ingrediant", [ upload.single('imageIngrediant') ,  passport.authenticate('bearer', { session: false })] , (req, res) => {
 
   req.body.imageIngrediant = req.file.filename
   const ingrediant = new Ingrediant(req.body);
@@ -33,7 +33,7 @@ router.post("/ingrediant",upload.single('imageIngrediant') , (req, res) => {
 
 ////////////////////////////////////////////////
 
-router.delete('/deleteIngrediant/:id',(req,res)=> {
+router.delete('/deleteIngrediant/:id', passport.authenticate('bearer', { session: false }) , (req,res)=> {
     _id=req.params.id
     Ingrediant.findByIdAndDelete(_id)
     .then (()=>{res.send('deleted , verifier data base')})
@@ -42,7 +42,7 @@ router.delete('/deleteIngrediant/:id',(req,res)=> {
 
 //////////////////////////////////////////////
 
-  router.put('/editIngrediant/:id' , upload.single('imageIngrediant') , (req,res)=> {
+  router.put('/editIngrediant/:id' , [ upload.single('imageIngrediant') , passport.authenticate('bearer', { session: false })] , (req,res)=> {
 
     req.body.imageIngrediant = req.file.filename
     Ingrediant.findByIdAndUpdate(req.params.id,req.body,{new:true})

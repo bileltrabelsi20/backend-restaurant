@@ -3,7 +3,7 @@ const Tacos = require("../models/tacosSchema");
 const router = express.Router();
 const multer = require('multer');
 const path = require ('path');
-
+const passport = require ('passport')
 ////////////////////////////////////////////////////////////////////////
 
 const storage = multer.diskStorage({
@@ -20,7 +20,7 @@ const upload = multer({ storage: storage });
 
 ////////////////// add_sandwich with image ///////////////////////
 
-router.post("/tacos",  upload.single('imageTacos') , (req, res) => {
+router.post("/tacos" , [ passport.authenticate('bearer', { session: false }) ,  upload.single('imageTacos')] , (req, res) => {
 
   req.body.imageTacos = req.file.filename
   const tacos = new Tacos(req.body);
@@ -33,7 +33,7 @@ router.post("/tacos",  upload.single('imageTacos') , (req, res) => {
 
 ////////////////// delete_sandwich ////////////////////
 
-router.delete('/deleteTacos/:id',(req,res)=> {
+router.delete('/deleteTacos/:id' , passport.authenticate('bearer', { session: false }) ,(req,res)=> {
     _id=req.params.id
     Tacos.findByIdAndDelete(_id)
     .then (()=>{res.send('deleted , verifier data base')})
@@ -42,7 +42,7 @@ router.delete('/deleteTacos/:id',(req,res)=> {
 
 //////////////// edit_sandwich ///////////////////////
 
-  router.put('/editTacos/:id' ,  upload.single('imageTacos') , (req,res)=> {
+  router.put('/editTacos/:id' , [ passport.authenticate('bearer', { session: false }) ,  upload.single('imageTacos') ] , (req,res)=> {
 
     req.body.imageTacos = req.file.filename
     Tacos.findByIdAndUpdate(req.params.id,req.body,{new:true})
@@ -52,7 +52,7 @@ router.delete('/deleteTacos/:id',(req,res)=> {
 
 ///////////////// effect ////////////////////////
 
-router.put ('/tacos/:idTacos/:idIngrediants' , (req,res) =>{
+router.put ('/tacos/:idTacos/:idIngrediants' , passport.authenticate('bearer', { session: false }) , (req,res) =>{
 
   Tacos.findByIdAndUpdate(req.params.idTacos , {$push:{ingrediants :  req.params.idIngrediants}})
   .then(result => {res.send(result)})
@@ -62,7 +62,7 @@ router.put ('/tacos/:idTacos/:idIngrediants' , (req,res) =>{
 
 ///////////////// get all ///////////////////
 
-router.get('/findAllTacos',(req,res)=>{
+router.get('/findAllTacos', passport.authenticate('bearer', { session: false }),(req,res)=>{
   Tacos.find()
   .then(result => {res.send(result)})
   .catch (err => console.log(err))
