@@ -10,7 +10,7 @@ const tacosShema = new Schema({
 
     ingrediants : [{type : Schema.Types.ObjectId , ref : 'ingrediant'}],
     
-}, {timesTamps:true});
+});
 
 const tacos = mongoose.model('tacos',tacosShema);
 module.exports = tacos

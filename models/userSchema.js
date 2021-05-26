@@ -9,6 +9,6 @@ const userSchema = new Schema({
   role : {type:String , default:"client"}
 
   
-},{timestamps:true});
+});
 const user = mongoose.model('user',userSchema);
 module.exports = user;

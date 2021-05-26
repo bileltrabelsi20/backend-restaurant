@@ -10,7 +10,7 @@ const burgerSchema = new Schema({
 
     ingrediants : [{type : Schema.Types.ObjectId , ref : 'ingrediant'}],
  
-}, {timesTamps:true});
+});
 
 const burger = mongoose.model('burger',burgerSchema);
 module.exports = burger

@@ -6,7 +6,7 @@ const ingrediantsSchema = new Schema({
     nomIngrediant : String ,
     imageIngrediant:String
     
-}, {timesTamps:true});
+});
 
 const ingrediant = mongoose.model('ingrediant',ingrediantsSchema);
 module.exports = ingrediant
