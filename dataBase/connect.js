@@ -6,7 +6,7 @@ const connect =mongoose.connect(mongoUrl,{
     useFindAndModify: false,
      useUnifiedTopology: true,
   }).then(result =>()=>{
-      console.log('server is http://localhost/3000');
+      console.log('connected to dataBase');
   }).catch(error =>console.log(error)); 
 
   module.exports=connect; 
