@@ -59,7 +59,7 @@ router.put ('/affect/:idSandwich/:idIngrediants' , passport.authenticate('bearer
 
 ///////////////// get all ///////////////////
 
-router.get('/findAllSandwichs' , passport.authenticate('bearer', { session: false }) ,(req,res)=>{
+router.get('/findAllSandwichs' , [ upload.single('imageSandwich') , passport.authenticate('bearer', { session: false }) ] , (req,res)=>{
   Sandwich.find()
   .then(result => {res.send(result)})
   .catch (err => console.log(err))

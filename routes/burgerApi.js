@@ -59,7 +59,7 @@ router.delete('/deleteBurger/:id', passport.authenticate('bearer', { session: fa
 
   ///////////////// get all ///////////////////
 
-router.get('/findAllBurgers' , passport.authenticate('bearer', { session: false }) , (req,res)=>{
+router.get('/findAllBurgers', [ upload.single('imageBurger') , passport.authenticate('bearer', { session: false }) ] , (req,res)=>{
   Burger.find()
   .then(result => {res.send(result)})
   .catch (err => console.log(err))

@@ -60,7 +60,7 @@ router.put ('/tacos/:idTacos/:idIngrediants' , passport.authenticate('bearer', {
 
 ///////////////// get all ///////////////////
 
-router.get('/findAllTacos', passport.authenticate('bearer', { session: false }),(req,res)=>{
+router.get('/findAllTacos', [ passport.authenticate('bearer', { session: false }) ,  upload.single('imageTacos')] ,(req,res)=>{
   Tacos.find()
   .then(result => {res.send(result)})
   .catch (err => console.log(err))
