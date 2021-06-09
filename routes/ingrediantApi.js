@@ -48,6 +48,11 @@ router.delete('/deleteIngrediant/:id', passport.authenticate('bearer', { session
     .catch (err => console.log(err))
   })
 
-////////////////////////////////////////////////
+///////////////// get all ///////////////////
 
+router.get('/findAllIngrediants' , [ upload.single('imageIngrediant') , passport.authenticate('bearer', { session: false }) ] , (req,res)=>{
+  Ingrediant.find()
+  .then(result => {res.send(result)})
+  .catch (err => console.log(err))
+})
 module.exports = router;
