@@ -36,7 +36,7 @@ router.post("/sandwich", [ upload.single('imageSandwich') , passport.authenticat
 router.delete('/deleteSandwich/:id' , passport.authenticate('bearer', { session: false }),(req,res)=> {
     _id=req.params.id
     Sandwich.findByIdAndDelete(_id)
-    .then (()=>{res.send('deleted , verifier data base')})
+    .then (()=>{res.json('deleted , verifier data base')})
     .catch (err => console.log("err"))
   })
 
@@ -44,7 +44,7 @@ router.delete('/deleteSandwich/:id' , passport.authenticate('bearer', { session:
 
   router.put('/editSandwich/:id' , [ passport.authenticate('bearer', { session: false }) , upload.single('imageSandwich')] , (req,res)=> {
     Sandwich.findByIdAndUpdate(req.params.id,req.body,{new:true})
-    .then(result => {res.send(result)})
+    .then(result => {res.json({message : 'updated , verifier data base'})})
     .catch (err => console.log(err))
   })
 
@@ -52,7 +52,7 @@ router.delete('/deleteSandwich/:id' , passport.authenticate('bearer', { session:
 
 router.put ('/affect/:idSandwich/:idIngrediants' , passport.authenticate('bearer', { session: false }) , (req,res) =>{
   Sandwich.findByIdAndUpdate(req.params.idSandwich , {$push:{ingrediants :  req.params.idIngrediants}})
-  .then(result => {res.send(result)})
+  .then(result => {res.json(result)})
   .catch (err => console.log(err))
 
 })
@@ -61,7 +61,7 @@ router.put ('/affect/:idSandwich/:idIngrediants' , passport.authenticate('bearer
 
 router.get('/findAllSandwichs' , [ upload.single('imageSandwich') , passport.authenticate('bearer', { session: false }) ] , (req,res)=>{
   Sandwich.find()
-  .then(result => {res.send(result)})
+  .then(result => {res.json(result)})
   .catch (err => console.log(err))
 })
   

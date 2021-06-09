@@ -36,7 +36,7 @@ router.post("/tacos" , [ passport.authenticate('bearer', { session: false }) ,  
 router.delete('/deleteTacos/:id' , passport.authenticate('bearer', { session: false }) ,(req,res)=> {
     _id=req.params.id
     Tacos.findByIdAndDelete(_id)
-    .then (()=>{res.send('deleted , verifier data base')})
+    .then (()=>{res.json({message : 'deleted , verifier data base'})})
     .catch (err => console.log("err"))
   })
 
@@ -45,7 +45,7 @@ router.delete('/deleteTacos/:id' , passport.authenticate('bearer', { session: fa
   router.put('/editTacos/:id' , [ passport.authenticate('bearer', { session: false }) ,  upload.single('imageTacos') ] , (req,res)=> {
     req.body.imageTacos = req.file.filename
     Tacos.findByIdAndUpdate(req.params.id,req.body,{new:true})
-    .then(result => {res.send(result)})
+    .then(result => {res.json({message : 'updated , verifier data base'})})
     .catch (err => console.log(err))
   })
 
@@ -53,7 +53,7 @@ router.delete('/deleteTacos/:id' , passport.authenticate('bearer', { session: fa
 
 router.put ('/tacos/:idTacos/:idIngrediants' , passport.authenticate('bearer', { session: false }) , (req,res) =>{
   Tacos.findByIdAndUpdate(req.params.idTacos , {$push:{ingrediants :  req.params.idIngrediants}})
-  .then(result => {res.send(result)})
+  .then(result => {res.json(result)})
   .catch (err => console.log(err))
 
 })
@@ -62,7 +62,7 @@ router.put ('/tacos/:idTacos/:idIngrediants' , passport.authenticate('bearer', {
 
 router.get('/findAllTacos', [ passport.authenticate('bearer', { session: false }) ,  upload.single('imageTacos')] ,(req,res)=>{
   Tacos.find()
-  .then(result => {res.send(result)})
+  .then(result => {res.json(result)})
   .catch (err => console.log(err))
 })
   

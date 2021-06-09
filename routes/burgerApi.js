@@ -35,7 +35,7 @@ router.post("/burger", [ upload.single('imageBurger') , passport.authenticate('b
 router.delete('/deleteBurger/:id', passport.authenticate('bearer', { session: false }),(req,res)=> {
     _id=req.params.id
     Burger.findByIdAndDelete(_id)
-    .then (()=>{res.send('deleted , verifier data base')})
+    .then (()=>{res.json({message : 'deleted , verifier data base'})})
     .catch (err => console.log("err"))
   })
 
@@ -44,7 +44,7 @@ router.delete('/deleteBurger/:id', passport.authenticate('bearer', { session: fa
   router.put('/editBurger/:id' , [ upload.single('imageBurger') , passport.authenticate('bearer', { session: false })]  , (req,res)=> {
     req.body.imageBurger = req.file.filename
     Burger.findByIdAndUpdate(req.params.id,req.body,{new:true})
-    .then(result => {res.send(result)})
+    .then(result => {res.json(result)})
     .catch (err => console.log(err))
   })
 
@@ -52,7 +52,7 @@ router.delete('/deleteBurger/:id', passport.authenticate('bearer', { session: fa
 
   router.put ('/affect/:idBurger/:idIngrediants' , passport.authenticate('bearer', { session: false }) ,  (req,res) =>{
     Burger.findByIdAndUpdate(req.params.idBurger , {$push:{ingrediants :  req.params.idIngrediants}})
-    .then(result => {res.send(result)})
+    .then(result => {res.json(result)})
     .catch (err => console.log(err))
   
   })
@@ -61,7 +61,7 @@ router.delete('/deleteBurger/:id', passport.authenticate('bearer', { session: fa
 
 router.get('/findAllBurgers', [ upload.single('imageBurger') , passport.authenticate('bearer', { session: false }) ] , (req,res)=>{
   Burger.find()
-  .then(result => {res.send(result)})
+  .then(result => {res.json(result)})
   .catch (err => console.log(err))
 })
   
