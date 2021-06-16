@@ -36,13 +36,17 @@ router.post("/sandwich", [ upload.single('imageSandwich') , passport.authenticat
 router.delete('/deleteSandwich/:id' , passport.authenticate('bearer', { session: false }),(req,res)=> {
     _id=req.params.id
     Sandwich.findByIdAndDelete(_id)
-    .then (()=>{res.json('deleted , verifier data base')})
+    .then (()=>{res.json({message : 'deleted , verifier data base'})})
     .catch (err => console.log("err"))
   })
 
 //////////////// edit_sandwich ///////////////////////
 
   router.put('/editSandwich/:id' , [ passport.authenticate('bearer', { session: false }) , upload.single('imageSandwich')] , (req,res)=> {
+    if(req.file !== undefined)
+    {
+     req.body.imageSandwich = req.file.filename
+    } 
     Sandwich.findByIdAndUpdate(req.params.id,req.body,{new:true})
     .then(result => {res.json({message : 'updated , verifier data base'})})
     .catch (err => console.log(err))

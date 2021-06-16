@@ -42,7 +42,10 @@ router.delete('/deleteBurger/:id', passport.authenticate('bearer', { session: fa
 ////////////////////////////////////////
 
   router.put('/editBurger/:id' , [ upload.single('imageBurger') , passport.authenticate('bearer', { session: false })]  , (req,res)=> {
-    req.body.imageBurger = req.file.filename
+    if(req.file !== undefined)
+    {
+      req.body.imageBurger = req.file.filename
+    }
     Burger.findByIdAndUpdate(req.params.id,req.body,{new:true})
     .then(result => {res.json(result)})
     .catch (err => console.log(err))

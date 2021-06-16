@@ -19,7 +19,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-////////////////// add_sandwich with image ///////////////////////
+////////////////// tacos with image ///////////////////////
 
 router.post("/tacos" , [ passport.authenticate('bearer', { session: false }) ,  upload.single('imageTacos')] , (req, res) => {
   req.body.imageTacos = req.file.filename
@@ -31,7 +31,7 @@ router.post("/tacos" , [ passport.authenticate('bearer', { session: false }) ,  
     .catch((error) => console.log(error));
 });
 
-////////////////// delete_sandwich ////////////////////
+////////////////// delete tecos ////////////////////
 
 router.delete('/deleteTacos/:id' , passport.authenticate('bearer', { session: false }) ,(req,res)=> {
     _id=req.params.id
@@ -40,10 +40,13 @@ router.delete('/deleteTacos/:id' , passport.authenticate('bearer', { session: fa
     .catch (err => console.log("err"))
   })
 
-//////////////// edit_sandwich ///////////////////////
+//////////////// edit_tacos ///////////////////////
 
   router.put('/editTacos/:id' , [ passport.authenticate('bearer', { session: false }) ,  upload.single('imageTacos') ] , (req,res)=> {
+   if(req.file !== undefined)
+   {
     req.body.imageTacos = req.file.filename
+   }
     Tacos.findByIdAndUpdate(req.params.id,req.body,{new:true})
     .then(result => {res.json({message : 'updated , verifier data base'})})
     .catch (err => console.log(err))
