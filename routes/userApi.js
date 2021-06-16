@@ -8,6 +8,7 @@ const passport = require ('passport')
 const bearer = require ('passport-http-bearer');
 
 //////////////////////////// Register //////////////////////////////////
+
 router.post('/register', async (req, res) => {
 const addUser = await User.findOne({ email: req.body.email });
    if (addUser == null) {
@@ -28,8 +29,7 @@ const addUser = await User.findOne({ email: req.body.email });
          from: 'Point.B.restaurant@gmail.com',
          to: req.body.email,
          subject: "BIENVENUE ! " ,
-         text: req.body.Name ,
-         html: `bonjour ` + req.body.Name + ` votre compte vient d'être créé <br> simple click <br>  http://localhost:4200 `
+         html: `bonjour ` + req.body.name + ` votre compte vient d'être créé <br> simple click <br>  http://localhost:4200 `
          });
          res.json(userData)
       })
@@ -48,7 +48,7 @@ router.post('/login', async (req, res) => {
 const connectedUser = await User.findOne({ email: req.body.email });
 
    if (!connectedUser) {
-         return res.status(401).json({ message: 'email or password is invalid!' });
+         return res.status(400).json({ message: 'email or password is invalid!' });
       }
    else {
       // compar entre mdp crypt

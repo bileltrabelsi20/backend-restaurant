@@ -16,6 +16,8 @@ const app = express();
 app.use(cors())
 app.use(bodyParser.json());
 var urlencodeParser = bodyParser.urlencoded({extended:false});
+app.use(express.static(__dirname + '/images'));
+
 
 /////////////////////////////////////////////////////////////
 

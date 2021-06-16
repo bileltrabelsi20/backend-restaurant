@@ -7,10 +7,8 @@ const burgerSchema = new Schema({
     nom : String ,
     compositions : Array,
     imageBurger : String,
-
     ingrediants : [{type : Schema.Types.ObjectId , ref : 'ingrediant'}],
  
-}, {timesTamps:true});
-
+});
 const burger = mongoose.model('burger',burgerSchema);
 module.exports = burger
