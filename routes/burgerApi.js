@@ -71,4 +71,3 @@ router.get('/findAllBurgers', [ upload.single('imageBurger') , passport.authenti
 //////////////////////////////////////////////////
 
 module.exports = router;
-
