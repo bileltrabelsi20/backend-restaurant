@@ -18,7 +18,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-/////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
 
 router.post("/burger", [ upload.single('imageBurger') , passport.authenticate('bearer', { session: false })]  , (req, res) => {
   req.body.imageBurger = req.file.filename
@@ -30,7 +30,7 @@ router.post("/burger", [ upload.single('imageBurger') , passport.authenticate('b
     .catch((error) => console.log(error));
 });
 
-////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
 
 router.delete('/deleteBurger/:id', passport.authenticate('bearer', { session: false }),(req,res)=> {
     _id=req.params.id
@@ -39,7 +39,7 @@ router.delete('/deleteBurger/:id', passport.authenticate('bearer', { session: fa
     .catch (err => console.log("err"))
   })
 
-////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
 
   router.put('/editBurger/:id' , [ upload.single('imageBurger') , passport.authenticate('bearer', { session: false })]  , (req,res)=> {
     if(req.file !== undefined)
@@ -50,8 +50,7 @@ router.delete('/deleteBurger/:id', passport.authenticate('bearer', { session: fa
     .then(result => {res.json(result)})
     .catch (err => console.log(err))
   })
-
-  ///////// affect ingrediants to burger ///////
+/////////////////////// affect ingrediants to burger //////////////////
 
   router.put ('/affect/:idBurger/:idIngrediants' , passport.authenticate('bearer', { session: false }) ,  (req,res) =>{
     Burger.findByIdAndUpdate(req.params.idBurger , {$push:{ingrediants :  req.params.idIngrediants}})
@@ -60,7 +59,7 @@ router.delete('/deleteBurger/:id', passport.authenticate('bearer', { session: fa
   
   })
 
-  ///////////////// get all ///////////////////
+///////////////////////// get all ///////////////////////////////////
 
 router.get('/findAllBurgers', [ upload.single('imageBurger') , passport.authenticate('bearer', { session: false }) ] , (req,res)=>{
   Burger.find()
@@ -68,6 +67,6 @@ router.get('/findAllBurgers', [ upload.single('imageBurger') , passport.authenti
   .catch (err => console.log(err))
 })
   
-//////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
 
 module.exports = router;
